@@ -39,11 +39,8 @@ jobs:
 
       - name: Prepare for iOS build
         run: |
-          cd ios
           pwd  # Print the current directory to confirm location
-          ls -la  # List contents to verify Podfile presence
+          ls -la  # List contents to verify Podfile presence and API key file
           pod install  # Install CocoaPods dependencies
           fastlane deploy_to_testflight  # Deploy to TestFlight
-        env:
-          API_KEY_PATH: ${{ github.workspace }}/ios/auth_key.p8
-        working-directory: ${{ github.workspace }}/ios
+        working-directory: ./ios
