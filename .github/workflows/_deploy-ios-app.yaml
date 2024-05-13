@@ -37,13 +37,5 @@ jobs:
       - name: Build Flutter App
         run: flutter build ios --release --no-codesign
 
-      - name: Prepare for iOS build
-        run: |
-          pwd  # Print the current directory to confirm location
-          ls -la  # List contents to verify Podfile presence and API key file
-          pod install  # Install CocoaPods dependencies
-          fastlane deploy_to_testflight  # Deploy to TestFlight
-        env:
-          API_KEY_PATH: auth_key.p8
-        working-directory: ./ios
+
 
