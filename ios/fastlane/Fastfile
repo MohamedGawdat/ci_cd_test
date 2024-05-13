@@ -57,7 +57,7 @@ platform :ios do
       in_house: false
     )
 
-#     xcversion(version: "14.3")
+    xcversion(version: "15.3")
 
     update_code_signing_settings(
       use_automatic_signing: false,
