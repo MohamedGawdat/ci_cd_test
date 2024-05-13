@@ -20,6 +20,9 @@ jobs:
           working-directory: ios
           bundler-cache: true  # This automatically runs `bundle install`
 
+      - name: bundle install
+        run: bundle install
+
       - name: Install Flutter
         uses: subosito/flutter-action@v1
         with:
@@ -29,7 +32,7 @@ jobs:
         run: flutter pub get
 
       - name: Prepare for iOS build
-        run: fastlane deploy_to_testflight
+        run: bundle exec fastlane deploy_to_testflight
         working-directory: ios
         env:
           API_KEY_PATH: ${{ github.workspace }}/ios/auth_key.p8
