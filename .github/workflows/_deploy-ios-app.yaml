@@ -39,9 +39,6 @@ jobs:
 
       - name: Prepare for iOS build
         run: |
-          cd ios
-          pwd 
-          pod install 
           fastlane deploy_to_testflight
         env:
           API_KEY_PATH: ios/auth_key.p8
