@@ -16,15 +16,8 @@ jobs:
       - name: Set up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
-
-      - name: Install Fastlane
-        run: |
-          gem install fastlane -N --user-install
-          echo "export PATH=\"$PATH:$(ruby -r rubygems -e 'puts Gem.user_dir')/bin\"" >> $GITHUB_ENV
-
-      - name: Install cocoapods
-        run: sudo gem install cocoapods
+          ruby-version: 3.2.1
+          bundler-cache: true  # This automatically runs `bundle install`
 
       - name: Install Flutter
         uses: subosito/flutter-action@v1
@@ -39,5 +32,4 @@ jobs:
           cd ./ios
           bundle exec fastlane deploy_to_testflight
         env:
-          API_KEY_PATH: ios/auth_key.p8
-
+          API_KEY_PATH: ${{ github.workspace }}/ios/auth_key.p8
