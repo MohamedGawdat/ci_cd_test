@@ -43,4 +43,7 @@ jobs:
           ls -la  # List contents to verify Podfile presence and API key file
           pod install  # Install CocoaPods dependencies
           fastlane deploy_to_testflight  # Deploy to TestFlight
+        env:
+          API_KEY_PATH: auth_key.p8
         working-directory: ./ios
+
