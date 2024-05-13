@@ -11,12 +11,13 @@ jobs:
     runs-on: macos-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Set up Ruby environment
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 3.2.1
+          ruby-version: 3.2
+          rubygems: latest
           working-directory: ios
           bundler-cache: true  # This automatically runs `bundle install`
 
@@ -24,7 +25,7 @@ jobs:
         run: bundle install
 
       - name: Install Flutter
-        uses: subosito/flutter-action@v1
+        uses: subosito/flutter-action@v2
         with:
           flutter-version: '3.19.6'
 
@@ -33,6 +34,5 @@ jobs:
 
       - name: Prepare for iOS build
         run: bundle exec fastlane deploy_to_testflight
-        working-directory: ios
         env:
           API_KEY_PATH: ${{ github.workspace }}/ios/auth_key.p8
