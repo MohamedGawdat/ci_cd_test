@@ -39,6 +39,7 @@ jobs:
 
       - name: Prepare for iOS build
         run: |
+          cd ios
           pwd 
           pod install 
           fastlane deploy_to_testflight
