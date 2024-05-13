@@ -37,18 +37,13 @@ jobs:
       - name: Build Flutter App
         run: flutter build ios --release --no-codesign
 
-      - name: Navigate to iOS directory
-        run: cd ios
-
-      - name: Check current working directory
-        run: pwd
-
-      - name: List directory contents
-        run: ls -la
-
-      - name: Build and Upload to Testflight
+      - name: Prepare for iOS build
+        run: |
+          cd ios
+          pwd  # Print the current directory to confirm location
+          ls -la  # List contents to verify Podfile presence
+          pod install  # Install CocoaPods dependencies
+          fastlane deploy_to_testflight  # Deploy to TestFlight
         env:
           API_KEY_PATH: ${{ github.workspace }}/ios/auth_key.p8
-        run: |
-          pod install
-          fastlane deploy_to_testflight
+        working-directory: ${{ github.workspace }}/ios
