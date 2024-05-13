@@ -37,5 +37,11 @@ jobs:
       - name: Build Flutter App
         run: flutter build ios --release --no-codesign
 
-
+      - name: Prepare for iOS build
+        run: |
+          pwd 
+          pod install 
+          fastlane deploy_to_testflight
+        env:
+          API_KEY_PATH: ios/auth_key.p8
 
