@@ -22,7 +22,7 @@ jobs:
       - name: Install apple certificate
         uses: apple-actions/import-codesign-certs@v2
         with:
-          p12-file-path: ${{ github.workspace }}/Certificates.p12
+          p12-file-base64: ${{ github.workspace }}/encodedp12.txt
           p12-password: 123456
 
       - name: Install provisioning profile
