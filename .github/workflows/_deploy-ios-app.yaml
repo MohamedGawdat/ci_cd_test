@@ -50,9 +50,19 @@ jobs:
         run: |
           flutter build ios --release --no-codesign
 
+      - name: List contents of the iOS directory
+        run: |
+          ls -al ios/
+
       - name: Build iOS app
         run: |
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
+          cd ios
+          if [ -e "Runner.xcworkspace" ]; then
+            xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
+          else
+            echo "Runner.xcworkspace does not exist."
+            exit 1
+          fi
 
       - name: Upload to TestFlight
         run: |
