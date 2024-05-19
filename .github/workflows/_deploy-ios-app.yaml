@@ -15,7 +15,7 @@ jobs:
 
       - name: Copy Apple credentials content from local file
         run: |
-          cp  ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8 ${{ github.workspace }}/auth_key.p8
+          cp /Users/gawdat/AndroidStudioProjects/ci_cd_test/AuthKey_9N2PC3WPXC.p8 ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8
 
       - name: Install apple certificate
         uses: apple-actions/import-codesign-certs@v2
