@@ -19,17 +19,7 @@ jobs:
           security create-keychain -p temp_password build.keychain
           security default-keychain -s build.keychain
           security unlock-keychain -p temp_password build.keychain
-          security set-keychain-settings -t 3600 -u build.keychain
           security import ${GITHUB_WORKSPACE}/CertificatesCICD.p12 -k build.keychain -P "123456" -T /usr/bin/codesign
-          security set-key-partition-list -S apple-tool:,apple: -s -k temp_password build.keychain
-          security find-identity -vp codesigning build.keychain
-
-      - name: Build iOS app
-        run: |
-          cd ios
-          pod install
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive CODE_SIGN_STYLE=Manual CODE_SIGN_IDENTITY="iPhone Developer" PROVISIONING_PROFILE_SPECIFIER=""
-
 
       - name: Install provisioning profile
         run: |
