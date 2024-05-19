@@ -47,7 +47,7 @@ jobs:
       - name: Build iOS app
         run: |
           cd ios
-          pod install
+          pod install --repo-update
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
 
       - name: Upload to TestFlight
