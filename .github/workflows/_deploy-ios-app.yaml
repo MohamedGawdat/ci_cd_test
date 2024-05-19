@@ -25,6 +25,11 @@ jobs:
           p12-file-path: ${{ github.workspace }}/Certificates.p12
           p12-password: 123456
 
+      - name: Install provisioning profile
+        uses: dietdoctor/install-ios-provisioning-profile@latest
+        with:
+          profile-base64: ${{ github.workspace }}/encodedCIONE.txt
+
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
