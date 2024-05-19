@@ -61,7 +61,7 @@ platform :ios do
     increment_build_number({
       build_number: latest_testflight_build_number + 1
     })
-    xcversion(version: "14.3")
+    xcversion(version: "15.3")
     update_code_signing_settings(
       use_automatic_signing: false,
       path: "Runner.xcodeproj",
