@@ -1,3 +1,46 @@
+# # # This file contains the fastlane.tools configuration
+# # # You can find documentation at https://docs.fastlane.tools
+# # #
+# # # For a list of all available actions, check out:
+# # #     https://docs.fastlane.tools/actions
+# # #
+# # # For a list of all available plugins, check out:
+# # #     https://docs.fastlane.tools/plugins/available-plugins
+# # #
+# #
+# # # Uncomment the line below if you want fastlane to automatically update itself
+# # # update_fastlane
+# #
+# # default_platform(:ios)
+# #
+# # platform :ios do
+# #   desc "Push a new release build to the App Store"
+# #   lane :release_app_store do
+# #     increment_build_number(xcodeproj: "Runner.xcodeproj")
+# #     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+# #     upload_to_app_store
+# #   end
+# #
+# #   desc "Upload a new build to TestFlight"
+# #   lane :beta do
+# #     app_store_connect_api_key(
+# #       key_id: "G86JBJ2727",
+# #       issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+# #       key_filepath: "./auth_key.p8",
+# #       # Uncomment the following lines if using a base64 encoded key:
+# #       # key_content: "ABC123", # base64 encoded key,
+# #       # is_key_content_base64: true,
+# #       # in_house: false # Set to true if your team is an Enterprise team
+# #     )
+# #     increment_build_number(xcodeproj: "Runner.xcodeproj")
+# #     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+# #     upload_to_testflight
+# #   end
+# # end
+# require 'spaceship'
+# Spaceship::ConnectAPI::App.const_set('ESSENTIAL_INCLUDES', 'appStoreVersions')
+default_platform(:ios)
+
 platform :ios do
   desc "Push a new beta build to TestFlight"
   lane :deploy_to_testflight do |options|
@@ -58,3 +101,67 @@ platform :ios do
     )
   end
 end
+
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+# update_fastlane # Uncomment this line to enable automatic updates of fastlane
+#
+# default_platform(:ios)
+#
+# platform :ios do
+#   desc "Push a new beta build to TestFlight with manual signing"
+#   lane :beta do
+#     import_certificate(
+#       certificate_path: "/Users/gawdat/AndroidStudioProjects/ci_cd_test/CertificatesCICD.p12",
+#       certificate_password: "123456",
+#       keychain_password: "156433",
+#       keychain_name: "login.keychain"
+#     )
+#     get_provisioning_profile(
+#       development: true,
+#       skip_install: true,
+#       force: true
+#     )
+#     build_app(
+#       workspace: "Runner.xcworkspace",
+#       scheme: "Runner",
+#       export_method: "development",
+#       export_options: {
+#         provisioningProfiles: {
+#           "com.deloy.cicdapp" => "CIONE"
+#         }
+#       }
+#     )
+#     upload_to_testflight
+#   end
+# end
+
+
+
+# app_store_connect_api_key(
+#   key_id: "9N2PC3WPXC",
+#   issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+#   key_filepath: "../AuthKey_9N2PC3WPXC.p8"
+#   # or
+#   # key_content: ENV["APP_STORE_CONNECT_API_KEY"] # Your key content
+# )
+# platform :ios do
+#   desc "Push a new beta build to TestFlight"
+#   lane :beta do
+#     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+#     upload_to_testflight
+#   end
+# end
