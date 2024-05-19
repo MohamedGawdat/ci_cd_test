@@ -13,9 +13,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Copy Apple credentials content from secrets to file
-        run: |
-          echo "${{ secrets.AUTH_KEY }}" | base64 -D > auth_key.p8
+#      - name: Copy Apple credentials content from secrets to file
+#        run: |
+#          echo "${{ secrets.AUTH_KEY }}" | base64 -D > auth_key.p8
 
       - name: Install apple certificate
         uses: apple-actions/import-codesign-certs@v2
@@ -45,12 +45,12 @@ jobs:
         run: sudo gem install cocoapods
 
       - name: Build and Upload to Testflight
-        env:
-          API_KEY_PATH: ../auth_key.p8
+#        env:
+#          API_KEY_PATH: ../auth_key.p8
         run: |
           cd ios
           echo $(pwd)
           pod install --repo-update
           fastlane deploy_to_testflight
           
-          base64 -i /Users/gawdat/Downloads/CIONE.mobileprovision | pbcopy
+#          base64 -i /Users/gawdat/Downloads/CIONE.mobileprovision | pbcopy
