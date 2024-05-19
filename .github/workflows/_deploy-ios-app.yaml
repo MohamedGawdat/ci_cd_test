@@ -38,17 +38,25 @@ jobs:
           flutter pub get
 
       - name: Install Cocoapods
-        run: sudo gem install cocoapods
+        run: |
+          sudo gem install cocoapods
+          pod setup
 
       - name: Build Flutter app for iOS
         run: |
           flutter build ios --release --no-codesign
+          
+
+      - name: Install and update pods
+        run: |
+          cd ios
+          pod deintegrate
+          pod install --repo-update
 
       - name: Build iOS app
         run: |
-          cd ios
-          pod install
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
+          
 
       - name: Upload to TestFlight
         run: |
