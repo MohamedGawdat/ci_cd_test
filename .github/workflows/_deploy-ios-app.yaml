@@ -13,57 +13,44 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+#      - name: Copy Apple credentials content from secrets to file
+#        run: |
+#          echo "${{ secrets.AUTH_KEY }}" | base64 -D > auth_key.p8
+
       - name: Install apple certificate
-        run: |
-          base64 --decode < ${GITHUB_WORKSPACE}/encodedp12.txt > ${GITHUB_WORKSPACE}/CertificatesCICD.p12
-          security create-keychain -p temp_password build.keychain
-          security default-keychain -s build.keychain
-          security unlock-keychain -p temp_password build.keychain
-          security import ${GITHUB_WORKSPACE}/CertificatesCICD.p12 -k build.keychain -P "123456" -T /usr/bin/codesign
+        uses: apple-actions/import-codesign-certs@v2
+        with:
+          p12-file-base64: ${{ secrets.DIST_CERT_CI_PRIVATE_KEY }}
+          p12-password: ${{ secrets.DIST_CERT_PASSWORD }}
 
       - name: Install provisioning profile
-        run: |
-          base64 --decode < ${GITHUB_WORKSPACE}/encodedCIONE.txt > ${GITHUB_WORKSPACE}/profile.mobileprovision
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          cp ${GITHUB_WORKSPACE}/profile.mobileprovision ~/Library/MobileDevice/Provisioning\ Profiles/
+        uses: dietdoctor/install-ios-provisioning-profile@latest
+        with:
+          profile-base64: ${{ secrets.CI_PROFILE }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.22.0'
+          flutter-version: "3.16.9"
 
-      - name: Clean and install dependencies
+      - name: Clean and Install dependencies
         run: |
           flutter clean
           flutter pub get
 
-      - name: Install Cocoapods
+      - name: Install Fastlane
+        run: gem install fastlane -N --user-install
+
+      - name: Install cocoapods
         run: sudo gem install cocoapods
 
-      - name: Prepare Cocoapods
+      - name: Build and Upload to Testflight
+#        env:
+#          API_KEY_PATH: ../auth_key.p8
         run: |
           cd ios
-          pod deintegrate
-          pod install --repo-update
-
-      - name: Build Flutter app for iOS
-        run: |
-          flutter build ios --release --no-codesign
-
-      - name: List contents of the iOS directory
-        run: |
-          ls -al ios/
-
-      - name: Build iOS app
-        run: |
-          cd ios
-          if [ -e "Runner.xcworkspace" ]; then
-            xcodebuild -workspace Runner.xcworkspace -scheme Runner -sdk iphoneos -configuration Release archive -archivePath $PWD/build/Runner.xcarchive
-          else
-            echo "Runner.xcworkspace does not exist."
-            exit 1
-          fi
-
-      - name: Upload to TestFlight
-        run: |
-          xcrun altool --upload-app -f $PWD/build/Runner.xcarchive/Products/Applications/Runner.app -t ios -u user@example.com -p app-specific-password
+          echo $(pwd)
+          pod install
+          fastlane deploy_to_testflight
+          
+#          base64 -i /Users/gawdat/Downloads/CIONE.mobileprovision | pbcopy
