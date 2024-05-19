@@ -7,19 +7,36 @@ on:
       - develop
 
 jobs:
-  build-and-deploy:
+  IOS_BUILD_AND_DISTRIBUTE:
     runs-on: macos-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+#      - name: Copy Apple credentials content from secrets to file
+#        run: |
+#          echo "${{ secrets.AUTH_KEY }}" | base64 -D > auth_key.p8
+
+      - name: Install apple certificate
+        uses: apple-actions/import-codesign-certs@v2
+#        with:
+#          p12-file-base64: ${{ secrets.DIST_CERT_TAXI_PRIVATE_KEY }}
+#          p12-password: ${{ secrets.DIST_CERT_PASSWORD }}
+
+      - name: Install provisioning profile
+        uses: dietdoctor/install-ios-provisioning-profile@latest
+#        with:
+#          profile-base64: ${{ secrets.TAXI_RIDER_PROFILE }}
+
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.19.6'
+          flutter-version: "3.16.9"
 
-      - name: Get Flutter dependencies
-        run: flutter pub get
+      - name: Clean and Install dependencies
+        run: |
+          flutter clean
+          flutter pub get
 
       - name: Install Fastlane
         run: gem install fastlane -N --user-install
@@ -28,8 +45,8 @@ jobs:
         run: sudo gem install cocoapods
 
       - name: Build and Upload to Testflight
-        env:
-          API_KEY_PATH: ../auth_key.p8
+#        env:
+#          API_KEY_PATH: ../auth_key.p8
         run: |
           cd ios
           echo $(pwd)

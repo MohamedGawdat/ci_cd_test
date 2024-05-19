@@ -1,28 +1,91 @@
-# # This file contains the fastlane.tools configuration
-# # You can find the documentation at https://docs.fastlane.tools
+# # # This file contains the fastlane.tools configuration
+# # # You can find documentation at https://docs.fastlane.tools
+# # #
+# # # For a list of all available actions, check out:
+# # #     https://docs.fastlane.tools/actions
+# # #
+# # # For a list of all available plugins, check out:
+# # #     https://docs.fastlane.tools/plugins/available-plugins
+# # #
 # #
-# # For a list of all available actions, check out
+# # # Uncomment the line below if you want fastlane to automatically update itself
+# # # update_fastlane
 # #
-# #     https://docs.fastlane.tools/actions
+# # default_platform(:ios)
 # #
-# # For a list of all available plugins, check out
+# # platform :ios do
+# #   desc "Push a new release build to the App Store"
+# #   lane :release_app_store do
+# #     increment_build_number(xcodeproj: "Runner.xcodeproj")
+# #     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+# #     upload_to_app_store
+# #   end
 # #
-# #     https://docs.fastlane.tools/plugins/available-plugins
-# #
-# 
-# # Uncomment the line if you want fastlane to automatically update itself
-# # update_fastlane
-# 
-# default_platform(:ios)
-# 
-# platform :ios do
-#   desc "Push a new beta build to TestFlight"
-#   lane :beta do
-#     increment_build_number(xcodeproj: "Runner.xcodeproj")
-#     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-#     upload_to_testflight
-#   end
-# end
+# #   desc "Upload a new build to TestFlight"
+# #   lane :beta do
+# #     app_store_connect_api_key(
+# #       key_id: "G86JBJ2727",
+# #       issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+# #       key_filepath: "./auth_key.p8",
+# #       # Uncomment the following lines if using a base64 encoded key:
+# #       # key_content: "ABC123", # base64 encoded key,
+# #       # is_key_content_base64: true,
+# #       # in_house: false # Set to true if your team is an Enterprise team
+# #     )
+# #     increment_build_number(xcodeproj: "Runner.xcodeproj")
+# #     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+# #     upload_to_testflight
+# #   end
+# # end
+# require 'spaceship'
+# Spaceship::ConnectAPI::App.const_set('ESSENTIAL_INCLUDES', 'appStoreVersions')
+default_platform(:ios)
+
+platform :ios do
+  desc "Push a new beta build to TestFlight"
+  lane :beta do |options|
+#     key_filepath=options[:secureFile]
+
+#     env = options[:env]
+
+    api_key = app_store_connect_api_key(
+#       key_id: "G86JBJ2727",
+#       issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+#       key_filepath: "./auth_key.p8",
+      key_id: "9N2PC3WPXC",
+      issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+      key_filepath: "../AuthKey_9N2PC3WPXC.p8",
+      in_house: false
+    )
+
+    increment_build_number({
+      build_number: latest_testflight_build_number + 1
+    })
+#     xcversion(version: "14.2")
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Runner.xcodeproj",
+      team_id: "NHF49WV7N9",
+      bundle_identifier: "com.deloy.cicdapp",
+      code_sign_identity: "iPhone Distribution",
+      profile_name: "CINEW",
+    )
+    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+    update_code_signing_settings(
+      use_automatic_signing: true,
+      path: "Runner.xcodeproj",
+      team_id: "NHF49WV7N9",
+      bundle_identifier: "com.deloy.cicdapp",
+      code_sign_identity: "iPhone Distribution",
+      profile_name: "CINEW",
+    )
+    upload_to_testflight(
+     api_key: api_key,
+      skip_waiting_for_build_processing: true,
+      changelog: "jojfsodjfiosjojakkjfdopa",
+    )
+  end
+end
 # This file contains the fastlane.tools configuration
 # You can find the documentation at https://docs.fastlane.tools
 #
@@ -37,49 +100,52 @@
 
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
-require 'spaceship'
-Spaceship::ConnectAPI::App.const_set('ESSENTIAL_INCLUDES', 'appStoreVersions')
-default_platform(:ios)
 
-platform :ios do
-  desc "Push a new beta build to TestFlight"
-  lane :deploy do |options|
-    key_filepath = options[:secureFile] || 'auth_key.p8'
+# update_fastlane # Uncomment this line to enable automatic updates of fastlane
+#
+# default_platform(:ios)
+#
+# platform :ios do
+#   desc "Push a new beta build to TestFlight with manual signing"
+#   lane :beta do
+#     import_certificate(
+#       certificate_path: "/Users/gawdat/AndroidStudioProjects/ci_cd_test/CertificatesCICD.p12",
+#       certificate_password: "123456",
+#       keychain_password: "156433",
+#       keychain_name: "login.keychain"
+#     )
+#     get_provisioning_profile(
+#       development: true,
+#       skip_install: true,
+#       force: true
+#     )
+#     build_app(
+#       workspace: "Runner.xcworkspace",
+#       scheme: "Runner",
+#       export_method: "development",
+#       export_options: {
+#         provisioningProfiles: {
+#           "com.deloy.cicdapp" => "CIONE"
+#         }
+#       }
+#     )
+#     upload_to_testflight
+#   end
+# end
 
-    env = options[:env]
 
-    api_key = app_store_connect_api_key(
-      key_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
-      issuer_id: "C2DBFT7KGA",
-    key_filepath: key_filepath,
 
-#       key_filepath: key_filepath,
-      in_house: false
-    )
-
-    xcversion(version: "15.3")
-
-    update_code_signing_settings(
-      use_automatic_signing: false,
-      path: "Runner.xcodeproj",
-      team_id: "NHF49WV7N9",
-      bundle_identifier: "com.deloy.cicdapp",
-      code_sign_identity: "iPhone Distribution",
-      profile_name: "Mohamed Gawdat",
-    )
-    build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
-    update_code_signing_settings(
-      use_automatic_signing: true,
-      path: "Runner.xcodeproj",
-      team_id: "NHF49WV7N9",
-      bundle_identifier: "com.deloy.cicdapp",
-      code_sign_identity: "iPhone Distribution",
-      profile_name: "Mohamed Gawdat",
-    )
-    upload_to_testflight(
-      api_key: api_key,
-      skip_waiting_for_build_processing: true,
-      changelog: "...",
-    )
-  end
-end
+# app_store_connect_api_key(
+#   key_id: "9N2PC3WPXC",
+#   issuer_id: "c3e455d1-3203-4ed7-8a3e-a2095344f155",
+#   key_filepath: "../AuthKey_9N2PC3WPXC.p8"
+#   # or
+#   # key_content: ENV["APP_STORE_CONNECT_API_KEY"] # Your key content
+# )
+# platform :ios do
+#   desc "Push a new beta build to TestFlight"
+#   lane :beta do
+#     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
+#     upload_to_testflight
+#   end
+# end
