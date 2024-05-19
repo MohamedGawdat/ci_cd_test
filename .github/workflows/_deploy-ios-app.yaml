@@ -15,7 +15,9 @@ jobs:
 
       - name: Copy Apple credentials content from local file
         run: |
-          cp /Users/gawdat/AndroidStudioProjects/ci_cd_test/AuthKey_9N2PC3WPXC.p8 ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8
+          echo ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8 | base64 -D > auth_key.p8
+
+#          cp /Users/gawdat/AndroidStudioProjects/ci_cd_test/AuthKey_9N2PC3WPXC.p8 ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8
 
       - name: Install apple certificate
         uses: apple-actions/import-codesign-certs@v2
@@ -41,7 +43,7 @@ jobs:
 
       - name: Build and upload to TestFlight
         env:
-          API_KEY_PATH: ${{ github.workspace }}/AuthKey_9N2PC3WPXC.p8
+          API_KEY_PATH: ${{ github.workspace }}/auth_key.p8
         run: |
           cd ios
           pod install
