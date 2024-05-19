@@ -58,7 +58,7 @@ platform :ios do
     })
 
     # Specify the Xcode version
-    xcversion(version: "15.3")
+    xcversion(version: "15.4")
 
     # Update code signing settings before building
     update_code_signing_settings(
