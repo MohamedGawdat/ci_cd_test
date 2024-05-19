@@ -28,7 +28,7 @@ jobs:
       - name: Install provisioning profile
         uses: dietdoctor/install-ios-provisioning-profile@latest
         with:
-          profile-base64: ${{ secrets.CI_PROFILE }}
+          profile-base64: ${{ secrets.CI_NEW_PROFILE }}
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2

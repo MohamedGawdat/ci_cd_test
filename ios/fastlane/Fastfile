@@ -68,7 +68,7 @@ platform :ios do
       team_id: "NHF49WV7N9",
       bundle_identifier: "com.deloy.cicdapp",
       code_sign_identity: "iPhone Distribution",
-      profile_name: "CIONE",
+      profile_name: "CINEW",
     )
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
     update_code_signing_settings(
@@ -77,7 +77,7 @@ platform :ios do
       team_id: "NHF49WV7N9",
       bundle_identifier: "com.deloy.cicdapp",
       code_sign_identity: "iPhone Distribution",
-      profile_name: "CIONE",
+      profile_name: "CINEW",
     )
     upload_to_testflight(
      api_key: api_key,
