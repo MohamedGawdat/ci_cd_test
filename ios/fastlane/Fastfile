@@ -67,7 +67,7 @@ platform :ios do
       path: "Runner.xcodeproj",
       team_id: "NHF49WV7N9",
       bundle_identifier: "com.deloy.cicdapp",
-      code_sign_identity: "iPhone Distribution",
+      code_sign_identity: "iPhone Developer",
       profile_name: "CINEW",
     )
     build_app(workspace: "Runner.xcworkspace", scheme: "Runner")
@@ -76,7 +76,7 @@ platform :ios do
       path: "Runner.xcodeproj",
       team_id: "NHF49WV7N9",
       bundle_identifier: "com.deloy.cicdapp",
-      code_sign_identity: "iPhone Distribution",
+      code_sign_identity: "iPhone Developer",
       profile_name: "CINEW",
     )
     upload_to_testflight(
